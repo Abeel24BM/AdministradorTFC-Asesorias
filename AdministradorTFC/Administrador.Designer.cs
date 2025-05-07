@@ -34,7 +34,6 @@
             userGrid = new DataGridView();
             viewEditButton = new Button();
             deleteButton = new Button();
-            refreshButton = new Button();
             addUserButton = new Button();
             groupLogin = new GroupBox();
             label1 = new Label();
@@ -48,7 +47,6 @@
             exerciseGrid = new DataGridView();
             editExerciseButton = new Button();
             deleteExerciseButton = new Button();
-            refreshExerciseButton = new Button();
             addExerciseButton = new Button();
             groupComidas = new GroupBox();
             selectedUserLabel = new Label();
@@ -71,10 +69,9 @@
             groupAdministrador.Controls.Add(searchBox);
             groupAdministrador.Controls.Add(searchButton);
             groupAdministrador.Controls.Add(userGrid);
+            groupAdministrador.Controls.Add(addUserButton);
             groupAdministrador.Controls.Add(viewEditButton);
             groupAdministrador.Controls.Add(deleteButton);
-            groupAdministrador.Controls.Add(refreshButton);
-            groupAdministrador.Controls.Add(addUserButton);
             groupAdministrador.Location = new Point(12, 12);
             groupAdministrador.Name = "groupAdministrador";
             groupAdministrador.Size = new Size(747, 388);
@@ -105,39 +102,25 @@
             userGrid.Name = "userGrid";
             userGrid.Size = new Size(731, 298);
             userGrid.TabIndex = 2;
-            // 
-            // viewEditButton
-            // 
-            viewEditButton.Location = new Point(10, 359);
+
+            addUserButton.Location = new Point(10, 359);
+            addUserButton.Name = "addUserButton";
+            addUserButton.Size = new Size(75, 23);
+            addUserButton.TabIndex = 6;
+            addUserButton.Text = "Añadir";
+
+            deleteButton.Location = new Point(90, 359);
+            deleteButton.Name = "deleteButton";
+            deleteButton.Size = new Size(75, 23);
+            deleteButton.TabIndex = 4;
+            deleteButton.Text = "Eliminar";
+
+            viewEditButton.Location = new Point(170, 359);
             viewEditButton.Name = "viewEditButton";
             viewEditButton.Size = new Size(75, 23);
             viewEditButton.TabIndex = 3;
             viewEditButton.Text = "Ver/Editar";
             viewEditButton.Click += viewEditButton_Click;
-            // 
-            // deleteButton
-            // 
-            deleteButton.Location = new Point(100, 359);
-            deleteButton.Name = "deleteButton";
-            deleteButton.Size = new Size(75, 23);
-            deleteButton.TabIndex = 4;
-            deleteButton.Text = "Eliminar";
-            // 
-            // refreshButton
-            // 
-            refreshButton.Location = new Point(190, 359);
-            refreshButton.Name = "refreshButton";
-            refreshButton.Size = new Size(75, 23);
-            refreshButton.TabIndex = 5;
-            refreshButton.Text = "Refrescar";
-            // 
-            // addUserButton
-            // 
-            addUserButton.Location = new Point(280, 359);
-            addUserButton.Name = "addUserButton";
-            addUserButton.Size = new Size(75, 23);
-            addUserButton.TabIndex = 6;
-            addUserButton.Text = "Añadir";
             // 
             // groupLogin
             // 
@@ -203,10 +186,9 @@
             groupEjercicios.Controls.Add(exerciseSearchBox);
             groupEjercicios.Controls.Add(exerciseSearchButton);
             groupEjercicios.Controls.Add(exerciseGrid);
+            groupEjercicios.Controls.Add(addExerciseButton);
             groupEjercicios.Controls.Add(editExerciseButton);
             groupEjercicios.Controls.Add(deleteExerciseButton);
-            groupEjercicios.Controls.Add(refreshExerciseButton);
-            groupEjercicios.Controls.Add(addExerciseButton);
             groupEjercicios.Location = new Point(12, 406);
             groupEjercicios.Name = "groupEjercicios";
             groupEjercicios.Size = new Size(747, 512);
@@ -236,38 +218,24 @@
             exerciseGrid.Name = "exerciseGrid";
             exerciseGrid.Size = new Size(731, 422);
             exerciseGrid.TabIndex = 2;
-            // 
-            // editExerciseButton
-            // 
-            editExerciseButton.Location = new Point(0, 483);
-            editExerciseButton.Name = "editExerciseButton";
-            editExerciseButton.Size = new Size(75, 23);
-            editExerciseButton.TabIndex = 3;
-            editExerciseButton.Text = "Editar";
-            // 
-            // deleteExerciseButton
-            // 
+
+            addExerciseButton.Location = new Point(10, 483);
+            addExerciseButton.Name = "addExerciseButton";
+            addExerciseButton.Size = new Size(75, 23);
+            addExerciseButton.TabIndex = 6;
+            addExerciseButton.Text = "Añadir";
+
             deleteExerciseButton.Location = new Point(90, 483);
             deleteExerciseButton.Name = "deleteExerciseButton";
             deleteExerciseButton.Size = new Size(75, 23);
             deleteExerciseButton.TabIndex = 4;
             deleteExerciseButton.Text = "Eliminar";
-            // 
-            // refreshExerciseButton
-            // 
-            refreshExerciseButton.Location = new Point(180, 483);
-            refreshExerciseButton.Name = "refreshExerciseButton";
-            refreshExerciseButton.Size = new Size(75, 23);
-            refreshExerciseButton.TabIndex = 5;
-            refreshExerciseButton.Text = "Refrescar";
-            // 
-            // addExerciseButton
-            // 
-            addExerciseButton.Location = new Point(270, 483);
-            addExerciseButton.Name = "addExerciseButton";
-            addExerciseButton.Size = new Size(75, 23);
-            addExerciseButton.TabIndex = 6;
-            addExerciseButton.Text = "Añadir";
+
+            editExerciseButton.Location = new Point(170, 483);
+            editExerciseButton.Name = "editExerciseButton";
+            editExerciseButton.Size = new Size(75, 23);
+            editExerciseButton.TabIndex = 3;
+            editExerciseButton.Text = "Editar";
             // 
             // groupComidas
             // 
@@ -307,30 +275,24 @@
             comidaGrid.Name = "comidaGrid";
             comidaGrid.Size = new Size(928, 298);
             comidaGrid.TabIndex = 2;
-            // 
-            // addFoodButton
-            // 
+
             addFoodButton.Location = new Point(10, 359);
             addFoodButton.Name = "addFoodButton";
             addFoodButton.Size = new Size(75, 23);
             addFoodButton.TabIndex = 3;
             addFoodButton.Text = "Añadir";
-            // 
-            // editFoodButton
-            // 
-            editFoodButton.Location = new Point(100, 359);
-            editFoodButton.Name = "editFoodButton";
-            editFoodButton.Size = new Size(75, 23);
-            editFoodButton.TabIndex = 4;
-            editFoodButton.Text = "Editar";
-            // 
-            // deleteFoodButton
-            // 
-            deleteFoodButton.Location = new Point(190, 359);
+
+            deleteFoodButton.Location = new Point(90, 359);
             deleteFoodButton.Name = "deleteFoodButton";
             deleteFoodButton.Size = new Size(75, 23);
-            deleteFoodButton.TabIndex = 5;
+            deleteFoodButton.TabIndex = 4;
             deleteFoodButton.Text = "Eliminar";
+
+            editFoodButton.Location = new Point(170, 359);
+            editFoodButton.Name = "editFoodButton";
+            editFoodButton.Size = new Size(75, 23);
+            editFoodButton.TabIndex = 5;
+            editFoodButton.Text = "Editar";
             // 
             // Administrador
             // 
@@ -362,14 +324,12 @@
         private DataGridView userGrid;
         private Button viewEditButton;
         private Button deleteButton;
-        private Button refreshButton;
         private Button addUserButton;
         private TextBox exerciseSearchBox;
         private Button exerciseSearchButton;
         private DataGridView exerciseGrid;
         private Button editExerciseButton;
         private Button deleteExerciseButton;
-        private Button refreshExerciseButton;
         private Button addExerciseButton;
 
         private GroupBox groupComidas;
