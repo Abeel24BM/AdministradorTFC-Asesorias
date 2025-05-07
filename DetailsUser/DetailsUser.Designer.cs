@@ -1,4 +1,5 @@
-﻿namespace DetailsUser
+﻿
+namespace DetailsUser
 {
     partial class DetailsUser
     {
@@ -28,69 +29,100 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.txtFullName = new System.Windows.Forms.TextBox();
-            this.txtEmail = new System.Windows.Forms.TextBox();
-            this.txtPassword = new System.Windows.Forms.TextBox();
-            this.chkClient = new System.Windows.Forms.CheckBox();
-            this.chkAdmin = new System.Windows.Forms.CheckBox();
-            this.dtpEndSub = new System.Windows.Forms.DateTimePicker();
-            this.btnSave = new System.Windows.Forms.Button();
-            this.SuspendLayout();
-
+            txtFullName = new TextBox();
+            txtEmail = new TextBox();
+            txtPassword = new TextBox();
+            chkClient = new CheckBox();
+            chkAdmin = new CheckBox();
+            dtpEndSub = new DateTimePicker();
+            btnSave = new Button();
+            SuspendLayout();
+            // 
             // txtFullName
-            this.txtFullName.Location = new System.Drawing.Point(30, 30);
-            this.txtFullName.Name = "txtFullName";
-            this.txtFullName.Size = new System.Drawing.Size(300, 23);
-            this.txtFullName.PlaceholderText = "Nombre completo";
-
+            // 
+            txtFullName.Location = new Point(30, 30);
+            txtFullName.Name = "txtFullName";
+            txtFullName.PlaceholderText = "Nombre completo";
+            txtFullName.Size = new Size(300, 23);
+            txtFullName.TabIndex = 0;
+            // 
             // txtEmail
-            this.txtEmail.Location = new System.Drawing.Point(30, 70);
-            this.txtEmail.Name = "txtEmail";
-            this.txtEmail.Size = new System.Drawing.Size(300, 23);
-            this.txtEmail.PlaceholderText = "Email";
-
+            // 
+            txtEmail.Location = new Point(30, 70);
+            txtEmail.Name = "txtEmail";
+            txtEmail.PlaceholderText = "Email";
+            txtEmail.Size = new Size(300, 23);
+            txtEmail.TabIndex = 1;
+            // 
             // txtPassword
-            this.txtPassword.Location = new System.Drawing.Point(30, 110);
-            this.txtPassword.Name = "txtPassword";
-            this.txtPassword.Size = new System.Drawing.Size(300, 23);
-            this.txtPassword.PlaceholderText = "Contraseña";
-            this.txtPassword.PasswordChar = '*';
-
+            // 
+            txtPassword.Location = new Point(30, 110);
+            txtPassword.Name = "txtPassword";
+            txtPassword.PasswordChar = '*';
+            txtPassword.PlaceholderText = "Contraseña";
+            txtPassword.Size = new Size(300, 23);
+            txtPassword.TabIndex = 2;
+            // 
             // chkClient
-            this.chkClient.Location = new System.Drawing.Point(30, 150);
-            this.chkClient.Text = "Cliente";
-            this.chkClient.AutoSize = true;
-
+            // 
+            chkClient.AutoSize = true;
+            chkClient.Location = new Point(30, 150);
+            chkClient.Name = "chkClient";
+            chkClient.Size = new Size(63, 19);
+            chkClient.TabIndex = 3;
+            chkClient.Text = "Cliente";
+            // 
             // chkAdmin
-            this.chkAdmin.Location = new System.Drawing.Point(150, 150);
-            this.chkAdmin.Text = "Administrador";
-            this.chkAdmin.AutoSize = true;
-
+            // 
+            chkAdmin.AutoSize = true;
+            chkAdmin.Location = new Point(150, 150);
+            chkAdmin.Name = "chkAdmin";
+            chkAdmin.Size = new Size(102, 19);
+            chkAdmin.TabIndex = 4;
+            chkAdmin.Text = "Administrador";
+            // 
             // dtpEndSub
-            this.dtpEndSub.Location = new System.Drawing.Point(30, 190);
-            this.dtpEndSub.Name = "dtpEndSub";
-            this.dtpEndSub.Size = new System.Drawing.Size(300, 23);
-            this.dtpEndSub.Format = DateTimePickerFormat.Short;
-
+            // 
+            dtpEndSub.Format = DateTimePickerFormat.Short;
+            dtpEndSub.Location = new Point(30, 190);
+            dtpEndSub.Name = "dtpEndSub";
+            dtpEndSub.Size = new Size(300, 23);
+            dtpEndSub.TabIndex = 5;
+            // 
             // btnSave
-            this.btnSave.Location = new System.Drawing.Point(30, 230);
-            this.btnSave.Text = "Guardar";
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
+            btnSave.Location = new Point(30, 230);
+            btnSave.Name = "btnSave";
+            btnSave.Size = new Size(75, 23);
+            btnSave.TabIndex = 6;
+            btnSave.Text = "Guardar";
+            btnSave.Click += btnSave_Click;
 
-            // Form
-            this.ClientSize = new System.Drawing.Size(400, 300);
-            this.Controls.Add(this.txtFullName);
-            this.Controls.Add(this.txtEmail);
-            this.Controls.Add(this.txtPassword);
-            this.Controls.Add(this.chkClient);
-            this.Controls.Add(this.chkAdmin);
-            this.Controls.Add(this.dtpEndSub);
-            this.Controls.Add(this.btnSave);
-            this.Name = "DetailsUser";
-            this.Text = "Detalles del Usuario";
-            this.Load += new System.EventHandler(this.DetailsUser_Load);
-            this.ResumeLayout(false);
-            this.PerformLayout();
+
+            followupGrid = new DataGridView();
+            followupGrid.Location = new Point(360, 30);
+            followupGrid.Size = new Size(540, 220);
+            followupGrid.ReadOnly = true;
+            followupGrid.AllowUserToAddRows = false;
+            followupGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            Controls.Add(followupGrid);
+
+            // 
+            // DetailsUser
+            // 
+            ClientSize = new Size(922, 452);
+            Controls.Add(txtFullName);
+            Controls.Add(txtEmail);
+            Controls.Add(txtPassword);
+            Controls.Add(chkClient);
+            Controls.Add(chkAdmin);
+            Controls.Add(dtpEndSub);
+            Controls.Add(btnSave);
+            Name = "DetailsUser";
+            Text = "Detalles del Usuario";
+            Load += DetailsUser_Load;
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -101,5 +133,7 @@
         private CheckBox chkAdmin;
         private DateTimePicker dtpEndSub;
         private Button btnSave;
+        private DataGridView followupGrid;
+
     }
 }

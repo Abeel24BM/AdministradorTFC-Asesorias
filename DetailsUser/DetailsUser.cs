@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text;
+using System.Data;
 
 namespace DetailsUser
 {
@@ -24,30 +25,53 @@ namespace DetailsUser
 
         private async void DetailsUser_Load(object sender, EventArgs e)
         {
-
+            var response = await client.GetAsync($"api/users/{_idUsuario}/");
+            if (response.IsSuccessStatusCode)
             {
-                var response = await client.GetAsync($"api/users/{_idUsuario}/");
-                if (response.IsSuccessStatusCode)
+                var json = await response.Content.ReadAsStringAsync();
+                using JsonDocument doc = JsonDocument.Parse(json);
+                JsonElement root = doc.RootElement;
+
+                txtFullName.Text = root.GetProperty("fullname").GetString();
+                txtEmail.Text = root.GetProperty("email").GetString();
+                txtPassword.Text = root.GetProperty("password").GetString();
+                chkClient.Checked = root.GetProperty("client").GetBoolean();
+                chkAdmin.Checked = root.GetProperty("admin").GetBoolean();
+
+                if (root.TryGetProperty("end_sub", out JsonElement endSub) && endSub.ValueKind != JsonValueKind.Null)
                 {
-                    var json = await response.Content.ReadAsStringAsync();
-                    using JsonDocument doc = JsonDocument.Parse(json);
-                    JsonElement root = doc.RootElement;
+                    dtpEndSub.Value = DateTime.Parse(endSub.GetString());
+                }
 
-                    txtFullName.Text = root.GetProperty("fullname").GetString();
-                    txtEmail.Text = root.GetProperty("email").GetString();
-                    txtPassword.Text = root.GetProperty("password").GetString();
-                    chkClient.Checked = root.GetProperty("client").GetBoolean();
-                    chkAdmin.Checked = root.GetProperty("admin").GetBoolean();
+                // Cargar seguimientos
+                if (root.TryGetProperty("followups", out JsonElement followups))
+                {
+                    var table = new DataTable();
+                    table.Columns.Add("Fecha");
+                    table.Columns.Add("Peso");
+                    table.Columns.Add("IMC");
+                    table.Columns.Add("Grasa");
+                    table.Columns.Add("Altura");
+                    table.Columns.Add("Observaciones");
 
-                    if (root.TryGetProperty("end_sub", out JsonElement endSub) && endSub.ValueKind != JsonValueKind.Null)
+                    foreach (var f in followups.EnumerateArray())
                     {
-                        dtpEndSub.Value = DateTime.Parse(endSub.GetString());
+                        string date = f.GetProperty("date").GetString();
+                        string weight = f.GetProperty("weight").ToString();
+                        string imc = f.TryGetProperty("imc", out var imcVal) ? imcVal.ToString() : "";
+                        string fat = f.TryGetProperty("fat", out var fatVal) ? fatVal.ToString() : "";
+                        string height = f.TryGetProperty("height", out var h) ? h.ToString() : "";
+                        string obs = f.TryGetProperty("observations", out var o) ? o.GetString() : "";
+
+                        table.Rows.Add(date, weight, imc, fat, height, obs);
                     }
+
+                    followupGrid.DataSource = table;
                 }
-                else
-                {
-                    MessageBox.Show("Error al cargar los datos del usuario.");
-                }
+            }
+            else
+            {
+                MessageBox.Show("Error al cargar los datos del usuario.");
             }
         }
 
