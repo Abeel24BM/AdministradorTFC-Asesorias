@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CreateUser\CreateUser.csproj" />
     <ProjectReference Include="..\DetailsUser\DetailsUser.csproj" />
   </ItemGroup>
 

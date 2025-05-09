@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Text;
 using Microsoft.VisualBasic.ApplicationServices;
 using DetailsUser;
+using CreateUser;
 
 namespace AdministradorTFC
 {
@@ -207,6 +208,56 @@ namespace AdministradorTFC
 
             using var detailsForm = new DetailsUser.DetailsUser(userId);
             detailsForm.ShowDialog();
+        }
+
+        private async void deleteButton_Click(object sender, EventArgs e)
+        {
+            if (userGrid.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Por favor, selecciona un usuario.");
+                return;
+            }
+
+            int userId = Convert.ToInt32(userGrid.SelectedRows[0].Cells["id"].Value);
+            string userName = userGrid.SelectedRows[0].Cells["fullname"].Value.ToString();
+
+            var confirmResult = MessageBox.Show(
+                $"¿Estás seguro de que deseas eliminar a {userName}?",
+                "Confirmar eliminación",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning
+            );
+
+            if (confirmResult == DialogResult.Yes)
+            {
+                try
+                {
+                    var response = await client.DeleteAsync($"api/users/{userId}/");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        MessageBox.Show("Usuario eliminado correctamente.");
+                        await LoadUsersAsync();
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Error al eliminar el usuario. Código: {response.StatusCode}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error de conexión al eliminar usuario: " + ex.Message);
+                }
+            }
+        }
+
+        private async void addUserButton_Click(object sender, EventArgs e)
+        {
+            using var createUserForm = new CreateUser.CreateUser();
+            var result = createUserForm.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                await LoadUsersAsync();
+            }
         }
     }
 }

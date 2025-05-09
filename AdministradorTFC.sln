@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35931.197 d17.13
+VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdministradorTFC", "AdministradorTFC\AdministradorTFC.csproj", "{47F8B709-2956-4012-B100-BF33E9C3A127}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DetailsUser", "DetailsUser\DetailsUser.csproj", "{81477D54-3148-4A3A-B979-CFC4D014B44E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateUser", "CreateUser\CreateUser.csproj", "{1039C7F6-47DB-4ADE-9220-3E021EC53676}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{81477D54-3148-4A3A-B979-CFC4D014B44E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81477D54-3148-4A3A-B979-CFC4D014B44E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81477D54-3148-4A3A-B979-CFC4D014B44E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1039C7F6-47DB-4ADE-9220-3E021EC53676}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1039C7F6-47DB-4ADE-9220-3E021EC53676}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1039C7F6-47DB-4ADE-9220-3E021EC53676}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1039C7F6-47DB-4ADE-9220-3E021EC53676}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
