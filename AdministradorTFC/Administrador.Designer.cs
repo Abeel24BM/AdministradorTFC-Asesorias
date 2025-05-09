@@ -219,6 +219,7 @@
             exerciseSearchButton.Size = new Size(75, 25);
             exerciseSearchButton.TabIndex = 1;
             exerciseSearchButton.Text = "Buscar";
+            exerciseSearchButton.Click += exerciseSearchButton_Click;
             // 
             // exerciseGrid
             // 
@@ -234,6 +235,7 @@
             addExerciseButton.Size = new Size(75, 23);
             addExerciseButton.TabIndex = 6;
             addExerciseButton.Text = "Añadir";
+            addExerciseButton.Click += addExerciseButton_Click;
             // 
             // editExerciseButton
             // 
@@ -242,6 +244,7 @@
             editExerciseButton.Size = new Size(75, 23);
             editExerciseButton.TabIndex = 3;
             editExerciseButton.Text = "Editar";
+            editExerciseButton.Click += editExerciseButton_Click;
             // 
             // deleteExerciseButton
             // 
@@ -250,6 +253,7 @@
             deleteExerciseButton.Size = new Size(75, 23);
             deleteExerciseButton.TabIndex = 4;
             deleteExerciseButton.Text = "Eliminar";
+            deleteExerciseButton.Click += deleteExerciseButton_Click;
             // 
             // groupComidas
             // 

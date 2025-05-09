@@ -4,6 +4,8 @@ using System.Text;
 using Microsoft.VisualBasic.ApplicationServices;
 using DetailsUser;
 using CreateUser;
+using DetailsExercise;
+using CreateExercise;
 
 namespace AdministradorTFC
 {
@@ -257,6 +259,91 @@ namespace AdministradorTFC
             if (result == DialogResult.OK)
             {
                 await LoadUsersAsync();
+            }
+        }
+
+        private void exerciseSearchButton_Click(object sender, EventArgs e)
+        {
+            string term = exerciseSearchBox.Text.Trim().Replace("'", "''");
+
+            if (string.IsNullOrEmpty(term))
+            {
+                exercisesTable.DefaultView.RowFilter = "";
+                exerciseGrid.DataSource = exercisesTable;
+            }
+            else
+            {
+                exercisesTable.DefaultView.RowFilter =
+                    $"name LIKE '%{term}%' OR muscle LIKE '%{term}%'";
+                exerciseGrid.DataSource = exercisesTable.DefaultView;
+            }
+        }
+
+        private async void deleteExerciseButton_Click(object sender, EventArgs e)
+        {
+            if (exerciseGrid.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Por favor, selecciona un ejercicio.");
+                return;
+            }
+
+            int exerciseId = Convert.ToInt32(exerciseGrid.SelectedRows[0].Cells["id"].Value);
+            string exerciseName = exerciseGrid.SelectedRows[0].Cells["name"].Value.ToString();
+
+            var confirmResult = MessageBox.Show(
+                $"¿Estás seguro de que deseas eliminar el ejercicio \"{exerciseName}\"?",
+                "Confirmar eliminación",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning
+            );
+
+            if (confirmResult == DialogResult.Yes)
+            {
+                try
+                {
+                    var response = await client.DeleteAsync($"api/exercises/{exerciseId}/");
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        MessageBox.Show("Ejercicio eliminado correctamente.");
+                        await LoadExercisesAsync();
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Error al eliminar el ejercicio. Código: {response.StatusCode}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error de conexión al eliminar el ejercicio: " + ex.Message);
+                }
+            }
+        }
+
+        private async void editExerciseButton_Click(object sender, EventArgs e)
+        {
+            if (exerciseGrid.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Por favor, selecciona un ejercicio.");
+                return;
+            }
+
+            int exerciseId = Convert.ToInt32(exerciseGrid.SelectedRows[0].Cells["id"].Value);
+            using var detailsForm = new DetailsExercise.DetailsExercise(exerciseId);
+
+            if (detailsForm.ShowDialog() == DialogResult.OK)
+            {
+                await LoadExercisesAsync();
+            }
+        }
+
+        private async void addExerciseButton_Click(object sender, EventArgs e)
+        {
+            using var createUserForm = new CreateExercise.CreateExercise();
+            var result = createUserForm.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                await LoadExercisesAsync();
             }
         }
     }

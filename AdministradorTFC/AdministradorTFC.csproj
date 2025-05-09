@@ -14,7 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CreateExercise\CreateExercise.csproj" />
     <ProjectReference Include="..\CreateUser\CreateUser.csproj" />
+    <ProjectReference Include="..\DetailsExercise\DetailsExercise.csproj" />
     <ProjectReference Include="..\DetailsUser\DetailsUser.csproj" />
   </ItemGroup>
 
