@@ -162,7 +162,6 @@
             email.Name = "email";
             email.Size = new Size(280, 23);
             email.TabIndex = 1;
-            email.Text = "abelblanco24@gmail.com";
             // 
             // label2
             // 
@@ -179,7 +178,6 @@
             password.Name = "password";
             password.Size = new Size(280, 23);
             password.TabIndex = 3;
-            password.Text = "#b1NsnS8KA";
             password.UseSystemPasswordChar = true;
             // 
             // loginButton
