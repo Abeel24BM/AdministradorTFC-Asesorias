@@ -55,6 +55,7 @@
             addFoodButton = new Button();
             editFoodButton = new Button();
             deleteFoodButton = new Button();
+            dtpFechaFiltro = new DateTimePicker();
             groupAdministrador.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)userGrid).BeginInit();
             groupLogin.SuspendLayout();
@@ -102,6 +103,7 @@
             userGrid.Name = "userGrid";
             userGrid.Size = new Size(731, 298);
             userGrid.TabIndex = 2;
+            userGrid.SelectionChanged += userGrid_SelectionChanged;
             // 
             // addUserButton
             // 
@@ -138,7 +140,7 @@
             groupLogin.Controls.Add(label2);
             groupLogin.Controls.Add(password);
             groupLogin.Controls.Add(loginButton);
-            groupLogin.Location = new Point(600, 415);
+            groupLogin.Location = new Point(1878, 930);
             groupLogin.Name = "groupLogin";
             groupLogin.Size = new Size(300, 180);
             groupLogin.TabIndex = 3;
@@ -197,9 +199,9 @@
             groupEjercicios.Controls.Add(addExerciseButton);
             groupEjercicios.Controls.Add(editExerciseButton);
             groupEjercicios.Controls.Add(deleteExerciseButton);
-            groupEjercicios.Location = new Point(12, 406);
+            groupEjercicios.Location = new Point(765, 12);
             groupEjercicios.Name = "groupEjercicios";
-            groupEjercicios.Size = new Size(747, 512);
+            groupEjercicios.Size = new Size(1050, 910);
             groupEjercicios.TabIndex = 1;
             groupEjercicios.TabStop = false;
             groupEjercicios.Text = "Gestión de ejercicios";
@@ -225,12 +227,12 @@
             // 
             exerciseGrid.Location = new Point(10, 55);
             exerciseGrid.Name = "exerciseGrid";
-            exerciseGrid.Size = new Size(731, 422);
+            exerciseGrid.Size = new Size(1020, 790);
             exerciseGrid.TabIndex = 2;
             // 
             // addExerciseButton
             // 
-            addExerciseButton.Location = new Point(10, 483);
+            addExerciseButton.Location = new Point(10, 860);
             addExerciseButton.Name = "addExerciseButton";
             addExerciseButton.Size = new Size(75, 23);
             addExerciseButton.TabIndex = 6;
@@ -239,7 +241,7 @@
             // 
             // editExerciseButton
             // 
-            editExerciseButton.Location = new Point(170, 483);
+            editExerciseButton.Location = new Point(170, 860);
             editExerciseButton.Name = "editExerciseButton";
             editExerciseButton.Size = new Size(75, 23);
             editExerciseButton.TabIndex = 3;
@@ -248,7 +250,7 @@
             // 
             // deleteExerciseButton
             // 
-            deleteExerciseButton.Location = new Point(90, 483);
+            deleteExerciseButton.Location = new Point(90, 860);
             deleteExerciseButton.Name = "deleteExerciseButton";
             deleteExerciseButton.Size = new Size(75, 23);
             deleteExerciseButton.TabIndex = 4;
@@ -263,9 +265,10 @@
             groupComidas.Controls.Add(addFoodButton);
             groupComidas.Controls.Add(editFoodButton);
             groupComidas.Controls.Add(deleteFoodButton);
-            groupComidas.Location = new Point(765, 12);
+            groupComidas.Controls.Add(dtpFechaFiltro);
+            groupComidas.Location = new Point(12, 410);
             groupComidas.Name = "groupComidas";
-            groupComidas.Size = new Size(944, 388);
+            groupComidas.Size = new Size(747, 508);
             groupComidas.TabIndex = 2;
             groupComidas.TabStop = false;
             groupComidas.Text = "Registro de comidas";
@@ -286,45 +289,57 @@
             filterFoodButton.Size = new Size(75, 25);
             filterFoodButton.TabIndex = 1;
             filterFoodButton.Text = "Filtrar";
+            filterFoodButton.Click += filterFoodButton_Click;
             // 
             // comidaGrid
             // 
             comidaGrid.Location = new Point(10, 55);
             comidaGrid.Name = "comidaGrid";
-            comidaGrid.Size = new Size(928, 298);
+            comidaGrid.Size = new Size(721, 392);
             comidaGrid.TabIndex = 2;
             // 
             // addFoodButton
             // 
-            addFoodButton.Location = new Point(10, 359);
+            addFoodButton.Location = new Point(10, 462);
             addFoodButton.Name = "addFoodButton";
             addFoodButton.Size = new Size(75, 23);
             addFoodButton.TabIndex = 3;
             addFoodButton.Text = "Añadir";
+            addFoodButton.Click += addFoodButton_Click;
             // 
             // editFoodButton
             // 
-            editFoodButton.Location = new Point(170, 359);
+            editFoodButton.Location = new Point(170, 462);
             editFoodButton.Name = "editFoodButton";
             editFoodButton.Size = new Size(75, 23);
             editFoodButton.TabIndex = 5;
             editFoodButton.Text = "Editar";
+            editFoodButton.Click += editFoodButton_Click;
             // 
             // deleteFoodButton
             // 
-            deleteFoodButton.Location = new Point(90, 359);
+            deleteFoodButton.Location = new Point(90, 462);
             deleteFoodButton.Name = "deleteFoodButton";
             deleteFoodButton.Size = new Size(75, 23);
             deleteFoodButton.TabIndex = 4;
             deleteFoodButton.Text = "Eliminar";
+            deleteFoodButton.Click += deleteFoodButton_Click;
+            // 
+            // dtpFechaFiltro
+            // 
+            dtpFechaFiltro.Format = DateTimePickerFormat.Short;
+            dtpFechaFiltro.Location = new Point(310, 20);
+            dtpFechaFiltro.Name = "dtpFechaFiltro";
+            dtpFechaFiltro.Size = new Size(120, 23);
+            dtpFechaFiltro.TabIndex = 6;
             // 
             // Administrador
             // 
             ClientSize = new Size(1878, 930);
-            Controls.Add(groupLogin);
             Controls.Add(groupAdministrador);
-            Controls.Add(groupEjercicios);
             Controls.Add(groupComidas);
+            Controls.Add(groupEjercicios);
+            Controls.Add(groupLogin);
             Name = "Administrador";
             Load += Administrador_Load;
             groupAdministrador.ResumeLayout(false);
@@ -363,6 +378,7 @@
         private Button editFoodButton;
         private Button deleteFoodButton;
         private Button filterFoodButton;
+        private DateTimePicker dtpFechaFiltro;
         private GroupBox groupEjercicios;
         private Button loginButton;
         private Label label1;

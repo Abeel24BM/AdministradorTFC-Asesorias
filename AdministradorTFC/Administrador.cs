@@ -6,6 +6,8 @@ using DetailsUser;
 using CreateUser;
 using DetailsExercise;
 using CreateExercise;
+using CreateFood;
+using DetailsFood;
 
 namespace AdministradorTFC
 {
@@ -344,6 +346,216 @@ namespace AdministradorTFC
             if (result == DialogResult.OK)
             {
                 await LoadExercisesAsync();
+            }
+        }
+
+        private async void userGrid_SelectionChanged(object sender, EventArgs e)
+        {
+            if (userGrid.SelectedRows.Count == 0)
+                return;
+
+            int userId = Convert.ToInt32(userGrid.SelectedRows[0].Cells["id"].Value);
+            string userName = userGrid.SelectedRows[0].Cells["fullname"].Value.ToString();
+
+            selectedUserLabel.Text = $"Usuario seleccionado: {userName}";
+
+            try
+            {
+                var resp = await client.GetAsync($"api/foods/?user_id={userId}");
+                resp.EnsureSuccessStatusCode();
+
+                string json = await resp.Content.ReadAsStringAsync();
+                var doc = JsonDocument.Parse(json).RootElement;
+
+                if (doc.TryGetProperty("foods", out var foods))
+                {
+                    var foodTable = new DataTable();
+                    foodTable.Columns.Add("id");
+                    foodTable.Columns.Add("name");
+                    foodTable.Columns.Add("calories");
+                    foodTable.Columns.Add("serving_size_g");
+                    foodTable.Columns.Add("fat_total_g");
+                    foodTable.Columns.Add("protein_g");
+                    foodTable.Columns.Add("carbohydrates_total_g");
+                    foodTable.Columns.Add("cuantity");
+                    foodTable.Columns.Add("food");
+                    foodTable.Columns.Add("date");
+
+                    foreach (var f in foods.EnumerateArray())
+                    {
+                        foodTable.Rows.Add(
+                            f.GetProperty("id").GetInt32(),
+                            f.GetProperty("name").GetString(),
+                            f.GetProperty("calories").GetDecimal(),
+                            f.GetProperty("serving_size_g").GetDecimal(),
+                            f.GetProperty("fat_total_g").GetDecimal(),
+                            f.GetProperty("protein_g").GetDecimal(),
+                            f.GetProperty("carbohydrates_total_g").GetDecimal(),
+                            f.GetProperty("cuantity").GetDecimal(),
+                            f.GetProperty("food").GetString(),
+                            f.GetProperty("date").GetString()
+                        );
+                    }
+
+                    comidaGrid.DataSource = foodTable;
+                }
+                else
+                {
+                    comidaGrid.DataSource = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar comidas: " + ex.Message);
+            }
+        }
+
+        private async void filterFoodButton_Click(object sender, EventArgs e)
+        {
+            if (userGrid.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Selecciona un usuario.");
+                return;
+            }
+
+            int userId = Convert.ToInt32(userGrid.SelectedRows[0].Cells["id"].Value);
+            string fecha = dtpFechaFiltro.Value.ToString("yyyy-MM-dd");
+
+            try
+            {
+                var resp = await client.GetAsync($"api/foods/?user_id={userId}&date={fecha}");
+                resp.EnsureSuccessStatusCode();
+
+                string json = await resp.Content.ReadAsStringAsync();
+                var doc = JsonDocument.Parse(json).RootElement;
+
+                if (doc.TryGetProperty("foods", out var foods))
+                {
+                    var table = new DataTable();
+                    table.Columns.Add("id");
+                    table.Columns.Add("name");
+                    table.Columns.Add("calories");
+                    table.Columns.Add("serving_size_g");
+                    table.Columns.Add("fat_total_g");
+                    table.Columns.Add("protein_g");
+                    table.Columns.Add("carbohydrates_total_g");
+                    table.Columns.Add("cuantity");
+                    table.Columns.Add("food");
+                    table.Columns.Add("date");
+
+                    foreach (var f in foods.EnumerateArray())
+                    {
+                        table.Rows.Add(
+                            f.GetProperty("id").GetInt32(),
+                            f.GetProperty("name").GetString(),
+                            f.GetProperty("calories").GetDecimal(),
+                            f.GetProperty("serving_size_g").GetDecimal(),
+                            f.GetProperty("fat_total_g").GetDecimal(),
+                            f.GetProperty("protein_g").GetDecimal(),
+                            f.GetProperty("carbohydrates_total_g").GetDecimal(),
+                            f.GetProperty("cuantity").GetDecimal(),
+                            f.GetProperty("food").GetString(),
+                            f.GetProperty("date").GetString()
+                        );
+                    }
+
+                    comidaGrid.DataSource = table;
+                    comidaGrid.Columns["id"].Visible = false;
+                }
+                else
+                {
+                    comidaGrid.DataSource = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al filtrar comidas: " + ex.Message);
+            }
+        }
+
+        private async void deleteFoodButton_Click(object sender, EventArgs e)
+        {
+            if (comidaGrid.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Por favor, selecciona una comida.");
+                return;
+            }
+            if (!comidaGrid.Columns.Contains("id"))
+            {
+                MessageBox.Show("No se encontró el ID de la comida. Asegúrate de incluirlo en la carga.");
+                return;
+            }
+
+            int foodId = Convert.ToInt32(comidaGrid.SelectedRows[0].Cells["id"].Value);
+            string foodName = comidaGrid.SelectedRows[0].Cells["name"].Value.ToString();
+
+            var confirm = MessageBox.Show(
+                $"¿Deseas eliminar la comida \"{foodName}\"?",
+                "Confirmar eliminación",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning
+            );
+
+            if (confirm == DialogResult.Yes)
+            {
+                try
+                {
+                    var response = await client.DeleteAsync($"api/foods/{foodId}/");
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        MessageBox.Show("Comida eliminada correctamente.");
+
+                        userGrid_SelectionChanged(null, null);
+                    }
+                    else
+                    {
+                        string errorMsg = await response.Content.ReadAsStringAsync();
+                        MessageBox.Show("Error al eliminar: " + errorMsg);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error de conexión: " + ex.Message);
+                }
+            }
+        }
+
+        private async void addFoodButton_Click(object sender, EventArgs e)
+        {
+            if (userGrid.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Selecciona un usuario primero.");
+                return;
+            }
+
+            int userId = Convert.ToInt32(userGrid.SelectedRows[0].Cells["id"].Value);
+
+            using var createFoodForm = new CreateFood.CreateFood(userId);
+            var result = createFoodForm.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                userGrid_SelectionChanged(null, null);
+            }
+        }
+
+        private async void editFoodButton_Click(object sender, EventArgs e)
+        {
+            if (comidaGrid.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Selecciona una comida para editar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            int selectedFoodId = Convert.ToInt32(comidaGrid.SelectedRows[0].Cells["id"].Value);
+
+            using var form = new DetailsFood.DetailsFood(client, selectedFoodId);
+            var result = form.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                userGrid_SelectionChanged(null, null);
             }
         }
     }
