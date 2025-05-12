@@ -342,6 +342,7 @@
             dtpFechaFiltro.Name = "dtpFechaFiltro";
             dtpFechaFiltro.Size = new Size(120, 27);
             dtpFechaFiltro.TabIndex = 6;
+            dtpFechaFiltro.ValueChanged += dtpFechaFiltro_ValueChanged;
             // 
             // groupEjerciciosUsuario
             // 
@@ -403,6 +404,7 @@
             userExerciseFilterDate.Name = "userExerciseFilterDate";
             userExerciseFilterDate.Size = new Size(120, 27);
             userExerciseFilterDate.TabIndex = 4;
+            userExerciseFilterDate.ValueChanged += userExerciseFilterDate_ValueChanged;
             // 
             // filterUserExerciseButton
             // 

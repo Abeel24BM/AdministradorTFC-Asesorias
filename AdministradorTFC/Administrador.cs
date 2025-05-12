@@ -61,6 +61,18 @@ namespace AdministradorTFC
 
         }
 
+        private void userExerciseFilterDate_ValueChanged(object sender, EventArgs e)
+        {
+            if (userExerciseFilterDate.CustomFormat == " ")
+                userExerciseFilterDate.CustomFormat = "dd/MM/yyyy";
+        }
+
+        private void dtpFechaFiltro_ValueChanged(object sender, EventArgs e)
+        {
+            if (dtpFechaFiltro.CustomFormat == " ")
+                dtpFechaFiltro.CustomFormat = "dd/MM/yyyy";
+        }
+
         private async void loginButton_Click(object sender, EventArgs e)
         {
             string userEmail = email.Text.Trim();
