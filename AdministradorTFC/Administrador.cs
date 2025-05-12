@@ -8,6 +8,7 @@ using DetailsExercise;
 using CreateExercise;
 using CreateFood;
 using DetailsFood;
+using DetailsExerciseUser;
 
 namespace AdministradorTFC
 {
@@ -91,6 +92,7 @@ namespace AdministradorTFC
                     groupAdministrador.Visible = true;
                     groupEjercicios.Visible = true;
                     groupComidas.Visible = true;
+                    groupEjerciciosUsuario.Visible = true;
 
                     // Cargar datos
                     await LoadUsersAsync();
@@ -359,6 +361,7 @@ namespace AdministradorTFC
 
             selectedUserLabel.Text = $"Usuario seleccionado: {userName}";
 
+            // =================== Cargar comidas ===================
             try
             {
                 var resp = await client.GetAsync($"api/foods/?user_id={userId}");
@@ -408,7 +411,58 @@ namespace AdministradorTFC
             {
                 MessageBox.Show("Error al cargar comidas: " + ex.Message);
             }
+
+            // =================== Cargar ejercicios del usuario ===================
+            try
+            {
+                var resp = await client.GetAsync($"api/exercise_clients/?user_id={userId}");
+                resp.EnsureSuccessStatusCode();
+
+                string json = await resp.Content.ReadAsStringAsync();
+                var doc = JsonDocument.Parse(json).RootElement;
+
+                if (doc.TryGetProperty("exercise_clients", out var exercises))
+                {
+                    var table = new DataTable();
+                    table.Columns.Add("id");
+                    table.Columns.Add("exercise_name");
+                    table.Columns.Add("weight");
+                    table.Columns.Add("reps");
+                    table.Columns.Add("sets");
+                    table.Columns.Add("rest");
+                    table.Columns.Add("date");
+
+                    foreach (var ex in exercises.EnumerateArray())
+                    {
+                        string exerciseName = ex.TryGetProperty("exercise", out var exProp) &&
+                                              exProp.TryGetProperty("name", out var nameProp)
+                                              ? nameProp.GetString()
+                                              : "(Sin nombre)";
+
+                        table.Rows.Add(
+                            ex.GetProperty("id").GetInt32(),
+                            exerciseName,
+                            ex.GetProperty("weight").GetInt32(),
+                            ex.GetProperty("reps").GetInt32(),
+                            ex.GetProperty("sets").GetInt32(),
+                            ex.GetProperty("rest").GetInt32(),
+                            ex.GetProperty("date").GetString()
+                        );
+                    }
+
+                    userExerciseGrid.DataSource = table;
+                }
+                else
+                {
+                    userExerciseGrid.DataSource = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar ejercicios del usuario: " + ex.Message);
+            }
         }
+
 
         private async void filterFoodButton_Click(object sender, EventArgs e)
         {
@@ -558,5 +612,210 @@ namespace AdministradorTFC
                 userGrid_SelectionChanged(null, null);
             }
         }
+
+        private async void filterUserExerciseButton_Click(object sender, EventArgs e)
+        {
+            if (userGrid.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Selecciona un usuario para filtrar ejercicios.");
+                return;
+            }
+
+            int userId = Convert.ToInt32(userGrid.SelectedRows[0].Cells["id"].Value);
+            string fecha = userExerciseFilterDate.Value.ToString("yyyy-MM-dd");
+
+            try
+            {
+                var resp = await client.GetAsync($"api/exercise_clients/?user_id={userId}&date={fecha}");
+                resp.EnsureSuccessStatusCode();
+
+                string json = await resp.Content.ReadAsStringAsync();
+                var doc = JsonDocument.Parse(json).RootElement;
+
+                if (doc.TryGetProperty("exercise_clients", out var exercises))
+                {
+                    var table = new DataTable();
+                    table.Columns.Add("id");
+                    table.Columns.Add("exercise_name");
+                    table.Columns.Add("weight");
+                    table.Columns.Add("reps");
+                    table.Columns.Add("sets");
+                    table.Columns.Add("rest");
+                    table.Columns.Add("date");
+
+                    foreach (var ex in exercises.EnumerateArray())
+                    {
+                        string exerciseName = ex.TryGetProperty("exercise", out var exProp) &&
+                                              exProp.TryGetProperty("name", out var nameProp)
+                                              ? nameProp.GetString()
+                                              : "(Sin nombre)";
+
+                        table.Rows.Add(
+                            ex.GetProperty("id").GetInt32(),
+                            exerciseName,
+                            ex.GetProperty("weight").GetInt32(),
+                            ex.GetProperty("reps").GetInt32(),
+                            ex.GetProperty("sets").GetInt32(),
+                            ex.GetProperty("rest").GetInt32(),
+                            ex.GetProperty("date").GetString()
+                        );
+                    }
+
+                    userExerciseGrid.DataSource = table;
+                }
+                else
+                {
+                    userExerciseGrid.DataSource = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al filtrar ejercicios: " + ex.Message);
+            }
+        }
+
+        private async void deleteUserExerciseButton_Click(object sender, EventArgs e)
+        {
+            if (userExerciseGrid.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Selecciona un ejercicio del usuario para eliminar.");
+                return;
+            }
+
+            if (!userExerciseGrid.Columns.Contains("id"))
+            {
+                MessageBox.Show("No se encontró el ID del ejercicio. Asegúrate de que la columna 'id' esté cargada.");
+                return;
+            }
+
+            int exerciseClientId = Convert.ToInt32(userExerciseGrid.SelectedRows[0].Cells["id"].Value);
+            string exerciseName = userExerciseGrid.SelectedRows[0].Cells["exercise_name"].Value?.ToString() ?? "(sin nombre)";
+
+            var confirmResult = MessageBox.Show(
+                $"¿Deseas eliminar el ejercicio \"{exerciseName}\" del usuario?",
+                "Confirmar eliminación",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning
+            );
+
+            if (confirmResult == DialogResult.Yes)
+            {
+                try
+                {
+                    var response = await client.DeleteAsync($"api/exercise_clients/?id={exerciseClientId}");
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        MessageBox.Show("Ejercicio del usuario eliminado correctamente.");
+                        userGrid_SelectionChanged(null, null);
+                    }
+                    else
+                    {
+                        string error = await response.Content.ReadAsStringAsync();
+                        MessageBox.Show($"Error al eliminar: {error}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error de conexión al eliminar ejercicio: " + ex.Message);
+                }
+            }
+        }
+
+        private async void addUserExerciseButton_Click(object sender, EventArgs e)
+        {
+            if (userGrid.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Selecciona un usuario antes de asignar un ejercicio.");
+                return;
+            }
+
+            int userId = Convert.ToInt32(userGrid.SelectedRows[0].Cells["id"].Value);
+
+            using (var form = new CreateExerciseUser.CreateExerciseUser(userId))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    // Actualizar los ejercicios del usuario
+                    await LoadExercisesForUser(userId);
+                }
+            }
+        }
+
+        private async Task LoadExercisesForUser(int userId)
+        {
+            try
+            {
+                var resp = await client.GetAsync($"api/exercise_clients/?user_id={userId}");
+                resp.EnsureSuccessStatusCode();
+
+                string json = await resp.Content.ReadAsStringAsync();
+                var doc = JsonDocument.Parse(json).RootElement;
+
+                if (doc.TryGetProperty("exercise_clients", out var exercises))
+                {
+                    var table = new DataTable();
+                    table.Columns.Add("id");
+                    table.Columns.Add("exercise_name");
+                    table.Columns.Add("weight");
+                    table.Columns.Add("reps");
+                    table.Columns.Add("sets");
+                    table.Columns.Add("rest");
+                    table.Columns.Add("date");
+
+                    foreach (var ex in exercises.EnumerateArray())
+                    {
+                        string exerciseName = ex.TryGetProperty("exercise", out var exProp) &&
+                                              exProp.TryGetProperty("name", out var nameProp)
+                                              ? nameProp.GetString()
+                                              : "(Sin nombre)";
+
+                        table.Rows.Add(
+                            ex.GetProperty("id").GetInt32(),
+                            exerciseName,
+                            ex.GetProperty("weight").GetInt32(),
+                            ex.GetProperty("reps").GetInt32(),
+                            ex.GetProperty("sets").GetInt32(),
+                            ex.GetProperty("rest").GetInt32(),
+                            ex.GetProperty("date").GetString()
+                        );
+                    }
+
+                    userExerciseGrid.DataSource = table;
+                }
+                else
+                {
+                    userExerciseGrid.DataSource = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar ejercicios del usuario: " + ex.Message);
+            }
+        }
+
+        private async void editUserExerciseButton_Click(object sender, EventArgs e)
+        {
+            if (userExerciseGrid.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Selecciona un ejercicio del usuario para editar.");
+                return;
+            }
+
+            int exerciseClientId = Convert.ToInt32(userExerciseGrid.SelectedRows[0].Cells["id"].Value);
+            using var form = new DetailsExerciseUser.DetailsExerciseUser(exerciseClientId);
+            var result = form.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                if (userGrid.SelectedRows.Count > 0)
+                {
+                    int userId = Convert.ToInt32(userGrid.SelectedRows[0].Cells["id"].Value);
+                    await LoadExercisesForUser(userId);
+                }
+            }
+        }
+
     }
 }
