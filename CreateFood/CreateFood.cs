@@ -100,7 +100,7 @@ namespace CreateFood
             if (string.IsNullOrWhiteSpace(txtQuantity.Text))
                 txtQuantity.Text = "100";
 
-            UpdateMacrosForQuantity(); 
+            UpdateMacrosForQuantity();
         }
 
         private void TxtQuantity_TextChanged(object sender, EventArgs e)
@@ -113,6 +113,9 @@ namespace CreateFood
             if (!decimal.TryParse(txtQuantity.Text, out decimal cantidad) || cantidad <= 0)
                 return;
 
+            if (baseCalories == 0 && baseProtein == 0 && baseFat == 0 && baseCarbs == 0)
+                return;
+
             decimal factor = cantidad / 100m;
 
             txtCalories.Text = (baseCalories * factor).ToString("0.##");
@@ -120,6 +123,7 @@ namespace CreateFood
             txtFat.Text = (baseFat * factor).ToString("0.##");
             txtCarbs.Text = (baseCarbs * factor).ToString("0.##");
         }
+
 
 
 
