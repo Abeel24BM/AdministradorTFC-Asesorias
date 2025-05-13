@@ -463,6 +463,7 @@ namespace AdministradorTFC
                     }
 
                     userExerciseGrid.DataSource = table;
+                    ResetDatePickers();
                 }
                 else
                 {
@@ -573,6 +574,7 @@ namespace AdministradorTFC
                         MessageBox.Show("Comida eliminada correctamente.");
 
                         userGrid_SelectionChanged(null, null);
+                        ResetDatePickers();
                     }
                     else
                     {
@@ -603,6 +605,7 @@ namespace AdministradorTFC
             if (result == DialogResult.OK)
             {
                 userGrid_SelectionChanged(null, null);
+                ResetDatePickers();
             }
         }
 
@@ -622,6 +625,7 @@ namespace AdministradorTFC
             if (result == DialogResult.OK)
             {
                 userGrid_SelectionChanged(null, null);
+                ResetDatePickers();
             }
         }
 
@@ -720,6 +724,7 @@ namespace AdministradorTFC
                     {
                         MessageBox.Show("Ejercicio del usuario eliminado correctamente.");
                         userGrid_SelectionChanged(null, null);
+                        ResetDatePickers();
                     }
                     else
                     {
@@ -751,6 +756,7 @@ namespace AdministradorTFC
                 {
                     // Actualizar los ejercicios del usuario
                     await LoadExercisesForUser(userId);
+                    ResetDatePickers();
                 }
             }
         }
@@ -825,9 +831,21 @@ namespace AdministradorTFC
                 {
                     int userId = Convert.ToInt32(userGrid.SelectedRows[0].Cells["id"].Value);
                     await LoadExercisesForUser(userId);
+                    ResetDatePickers();
                 }
             }
         }
+
+
+        private void ResetDatePickers()
+        {
+            dtpFechaFiltro.Format = DateTimePickerFormat.Custom;
+            dtpFechaFiltro.CustomFormat = " ";
+
+            userExerciseFilterDate.Format = DateTimePickerFormat.Custom;
+            userExerciseFilterDate.CustomFormat = " ";
+        }
+
 
     }
 }
